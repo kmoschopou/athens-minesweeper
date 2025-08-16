@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Airbnb Minesweeper: Athens</title>
+
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <header class="app-header">
+  <h1>Airbnb Minesweeper: Athens</h1>
+  <p class="subtitle">Reveal the safe zones from short-term rental.</p>
+</header>
+
+  <main class="app">
+    <section class="controls">
+      <div class="card" hidden>
+        <h2>1) Data</h2>
+        <p>Put your file at <code>/data/athens_hex_counts.geojson</code> and click “Load”.</p>
+        <button id="btnLoad">Load data</button>
+        <div id="dataStatus" class="status">Not loaded yet.</div>
+      </div>
+
+      <div class="card" hidden>
+        <h2>2) Grid spacing</h2>
+        <label>Horizontal center distance (m): <input id="hSpacing" type="number" value="274" min="10" /></label>
+        <label>Vertical center distance (m): <input id="vSpacing" type="number" value="237" min="10" /></label>
+        <p class="hint">Use the same <em>Horizontal</em>/<em>Vertical spacing</em> you used in QGIS (Hexagon grid). For flat‑top hexagons: horizontal = hex width, vertical = hex height.</p>
+        <button id="btnApplySpacing">Apply &amp; Compute neighbors</button>
+      </div>
+
+      <div class="card" id="about">
+  <h2>About</h2>
+  <p><strong>This interactive map reveals the spread of short-term rentals across Athens, based on real Airbnb data.</strong></p>
+  <p>Each hexagon represents a walkable area, roughly a 3–4 minutes walking.</p>
+  <p>Just like in classic Minesweeper, your goal is to uncover all the safe zones without hitting a hotspot. Set your threshold, then click to explore.</p>
+  <p class="hint">Inspired by the Playable Data Lab project in Mallorca.</p>
+</div>
+
+
+
+      <div class="card">
+        <h2> Threshold (mines)</h2>
+        <div class="threshold">
+          <input id="threshold" type="range" min="0" max="500" step="1" value="15" />
+          <span id="thresholdVal">15</span>
+        </div>
+        <button id="btnReset">New game</button>
+        <div class="legend">
+          <span class="legend-item"><span class="chip mine"></span> ≥ threshold (mine)</span>
+          <span class="legend-item"><span class="chip safe"></span> &lt; threshold (safe)</span>
+          <span class="legend-item"><span class="chip flag"></span> flag</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2> Airbnb histogram</h2>
+        <canvas id="hist" width="320" height="220" aria-label="Histogram" role="img"></canvas>
+        <p class="hint">Shows distribution of counts per cell. Vertical line is the threshold.</p>
+      </div>
+      
+      <div class="card">
+        <h2>Rules</h2>
+        <ul class="rules">
+          <li>Left click: reveal cell.</li>
+          <li>Right click / long‑press: toggle flag.</li>
+          <li>Number on a safe cell = how many “mines” (neighbors above threshold) around it (6 neighbors for hexes).</li>
+          <li>Revealing a 0 cascades (flood‑fill).</li>
+          <li>You win when all safe cells are revealed.</li>
+        </ul>
+      </div>
+
+      <footer class="credits">
+        <small>Data: Inside Airbnb (Athens, 24/06/2025). Concept: spatial Minesweeper. Built with HTML/CSS/JS · Chart.js.</small>
+      </footer>
+    </section>
+
+    <section class="board">
+      <div id="boardContainer" class="board-wrap">
+        <svg id="board" preserveAspectRatio="xMidYMid meet"></svg>
+        <div id="overlay" class="overlay hidden">
+          <div class="modal">
+            <button id="overlayClose" class="modal-close" aria-label="Close">×</button>
+            <h3 id="overlayTitle"></h3>
+            <p id="overlayMsg"></p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="main.js"></script>
+</body>
+</html>

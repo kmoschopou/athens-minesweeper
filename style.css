@@ -1,0 +1,111 @@
+*{box-sizing:border-box}
+:root{
+  --bg:#0c1016;
+  --panel:#181f27;
+  --panel-2:#010101;
+  --text:#e6eef8;
+  --muted:#a2b4c8;
+  --accent:#7cd1f9;
+  --mine:#711a1a;
+  --safe:#0d6860;
+  --flag:#ffd166;
+  --stroke:#1b2634;
+}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--text);font:16px/1.4 system-ui,Segoe UI,Roboto,Arial}
+h1,h2,h3{margin:0 0 .5rem}
+.app-header{padding:1rem 1.25rem;border-bottom:1px solid var(--stroke);background:linear-gradient(180deg,rgba(124,209,249,.06),transparent)}
+.subtitle{margin:.25rem 0 0;color:var(--muted)}
+.app{display:grid;grid-template-columns:360px 1fr;gap:1rem;padding:1rem;height:calc(100% - 74px)}
+.controls{display:flex;flex-direction:column;gap:1rem;max-height:calc(100vh - 120px);overflow:auto}
+.board{min-height:60vh}
+.card{background:var(--panel);border:1px solid var(--stroke);border-radius:16px;padding:1rem;box-shadow:0 4px 18px rgba(0,0,0,.25)}
+label{display:block;margin:.5rem 0 .25rem;color:var(--muted)}
+input[type=number]{width:100%;padding:.5rem;border-radius:10px;border:1px solid var(--stroke);background:var(--panel-2);color:var(--text)}
+button{cursor:pointer;background:var(--accent);color:#002133;border:none;border-radius:12px;padding:.55rem .8rem;font-weight:600}
+button:disabled{opacity:.5;cursor:not-allowed}
+.status{margin-top:.5rem;color:var(--muted)}
+.threshold{display:flex;align-items:center;gap:.75rem}
+input[type=range]{width:100%}
+.legend{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.5rem}
+.legend-item{display:flex;align-items:center;gap:.35rem;color:var(--muted);font-size:.9rem}
+.chip{display:inline-block;width:14px;height:14px;border-radius:4px;border:1px solid var(--stroke)}
+.chip.mine{background:var(--mine)}
+.chip.safe{background:var(--safe)}
+.chip.flag{background:var(--flag)}
+.rules{padding-left:1rem;margin:.25rem 0 0;color:var(--muted)}
+.credits{color:var(--muted);padding:0 .5rem}
+.board-wrap{position:relative;height:100%;min-height:70vh;background:var(--panel);border:1px solid var(--stroke);border-radius:16px;overflow:hidden}
+#board{width:100%;height:100%}
+.hex{stroke:rgba(255,255,255,.08);stroke-width:.7;cursor:pointer}
+.hex.hidden{fill:#162030}
+.hex.revealed.safe{fill:#0d6860}
+.hex.revealed.mine{fill:#711a1a}
+.hex.flagged{fill:#2d240e}
+.hex:hover{stroke:var(--accent);stroke-width:1}
+.count-label{font:12px Segoe UI,Roboto;fill:var(--text);text-anchor:middle;dominant-baseline:central;pointer-events:none;opacity:.9}
+.overlay{position:absolute;inset:0;display:grid;place-items:center;background:rgba(0,0,0,.45);backdrop-filter:blur(4px)}
+.overlay.hidden{display:none}
+.modal{background:var(--panel);border:1px solid var(--stroke);border-radius:16px;padding:1rem 1.25rem;max-width:360px;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.4)}
+@media (max-width:900px){
+  .app{grid-template-columns:1fr}
+  .controls{order:2}
+  .board{order:1}
+}
+.hex.disabled-cell {
+  fill: #8a8f98;         /* γκρι */
+  stroke: #6f7680;
+  cursor: not-allowed;   /* δείκτης απαγόρευσης */
+}
+
+.hex.disabled-cell:hover {
+  stroke: #6f7680;       /* μην “φωτίζει” στο hover */
+}
+
+/* βεβαιώσου ότι το modal είναι relative */
+#overlay .modal { position: relative; }
+
+/* Close (Χ) πάνω δεξιά – καθαρό από generic button styles */
+#overlay .modal > .modal-close{
+  all: unset;
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 2;
+
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 999px;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1;
+  background: rgba(255,255,255,.12);
+  color: rgba(255,255,255,.92);
+  cursor: pointer;
+}
+
+#overlay .modal > .modal-close:hover { background: rgba(255,255,255,.20); }
+#overlay .modal > .modal-close:focus { outline: 2px solid rgba(255,255,255,.35); outline-offset: 2px; }
+
+/* όταν το SVG έχει class "locked", απενεργοποίησε τα κλικ */
+#board.locked .hex { pointer-events: none; }
+
+.stats{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:.5rem .75rem;
+  margin:.5rem 0 1rem;
+  color:var(--muted);
+}
+.stats strong{ color:var(--text); }
+.rules.small{ font-size:.9rem; }
+.about-notes summary{
+  cursor:pointer;
+  color:var(--accent);
+  margin:.25rem 0 .5rem;
+}
+
+.mine-icon { pointer-events: none; }  /* να μην “πιάνεται” το κλικ πάνω στο εικονίδιο */
