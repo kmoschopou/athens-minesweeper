@@ -6,8 +6,8 @@ let revealedCount = 0, totalSafe = 0, threshold = 15;
 let neighborGraphReady = false, histChart = null;
 let gameOver = false; // ✅ νέα σημαία: όταν χάνεις κλειδώνει το board
 
-// ΠΡΟΚΑΘΟΡΙΣΜΕΝΕΣ αποστάσεις (flat-top hex): H = width, V = height
-const PRESET_GRID = { H: 316, V: 274 }; // βάλ’ τα δικά σου νούμερα
+// (flat-top hex): H = width, V = height
+const PRESET_GRID = { H: 316, V: 274 }; // 
 
 // DOM
 const boardSVG      = document.getElementById('board');
@@ -16,7 +16,7 @@ const thresholdInput= document.getElementById('threshold');
 const thresholdVal  = document.getElementById('thresholdVal');
 const btnReset      = document.getElementById('btnReset');
 
-// Overlay (Χ για κλείσιμο)
+// Overlay 
 const overlay       = document.getElementById('overlay');
 const overlayTitle  = document.getElementById('overlayTitle');
 const overlayMsg    = document.getElementById('overlayMsg');
@@ -82,7 +82,7 @@ async function loadData(){
   dataStatus && (dataStatus.textContent = `Loaded ${features.length} cells.`);
 
   const conv = transformToViewBox(features);
-  const countField = 'NUMPOINTS'; // ρητά το πεδίο με το πλήθος
+  const countField = 'NUMPOINTS'; // 
 
   cells = features.map((f,idx)=>{
     const {cx,cy} = centroidOfFeature(f);
@@ -94,15 +94,15 @@ async function loadData(){
     return {
       id: idx, feat:f, polySvgPath: featureToPath(f,conv), cx, cy,
       count, neighbors:[], state:'hidden', isMine:false, adjMines:0,
-      isZero: (count===null), // μόνο τα null είναι εκτός παιχνιδιού
-      boom: false             // <— ΝΕΟ: θα γίνει true μόνο στο «μοιραίο» κελί
+      isZero: (count===null), // 
+      boom: false             // 
     };
   });
 
   drawBoard();
   buildHistogram(cells.map(c => (c.count ?? 0)));
 
-  // 👉 Αυτόματος υπολογισμός γειτόνων/ναρκών
+  
   computeNeighborsFixed();
   assignMines();
   updateStyles();
@@ -142,14 +142,14 @@ function assignMines(){
     c.isMine = (c.count!==null && c.count >= threshold);
     c.adjMines = 0;
     c.state = 'hidden';
-    c.boom = false; // <— καθάρισμα για νέα παρτίδα
+    c.boom = false; // 
   });
   for(const c of cells){
     let m=0; for(const nid of c.neighbors) if(cells[nid].isMine) m++; c.adjMines = m;
   }
   totalSafe = cells.filter(c => !c.isZero && !c.isMine).length;
 
-  // ✅ κάθε νέα παρτίδα: ξεκλείδωτο board
+  
   gameOver = false;
   boardSVG.classList.remove('locked');
 }
@@ -188,7 +188,7 @@ function drawBoard(){
 }
 
 function updateStyles(){
-  // 1) καθάρισε τυχόν παλιές εικόνες
+  
   boardSVG.querySelectorAll('image.mine-icon').forEach(el => el.remove());
 
   for(const c of cells){
@@ -213,11 +213,11 @@ function updateStyles(){
     }
     else if(c.state==='revealed'){
       if(c.isMine){
-        // όλα τα mines κόκκινα…
+        
         path.classList.add('hex','revealed','mine');
         label.textContent = '';
 
-        // …αλλά ΜΟΝΟ το «μοιραίο» παίρνει icon
+        
         if (c.boom){
           const bb   = path.getBBox();
           const size = Math.min(bb.width, bb.height) * 0.65;
@@ -232,7 +232,7 @@ function updateStyles(){
           img.setAttribute('class',  'mine-icon');
           img.dataset.id = c.id;
 
-          // href για μοντέρνα/παλιά implementations
+          
           img.setAttribute('href', MINE_ICON_URL);
           img.setAttributeNS('http://www.w3.org/1999/xlink','href', MINE_ICON_URL);
 
@@ -262,20 +262,20 @@ function floodReveal(id){
   }
 }
 function onLeft(e){
-  if (gameOver) return; // ✅ αγνόησε κλικ αν έχει τελειώσει
+  if (gameOver) return; // 
 
   const id=parseInt(e.currentTarget.dataset.id,10);
   const c=cells[id];
   if(c.isZero || c.state==='flagged' || c.state==='revealed') return;
 
   if (c.isMine){
-  c.boom = true;        // <— ΜΟΝΟ αυτό το κελί θα πάρει το εικονίδιο
-  revealAllMines();     // δείξε όλες τις νάρκες (χωρίς εικόνα)
-  revealAllSafe();      // δείξε και όλα τα safe κελιά
+  c.boom = true;        // 
+  revealAllMines();     // 
+  revealAllSafe();      // 
   revealedCount = totalSafe;
   gameOver = true;
   boardSVG.classList.add('locked');
-  updateStyles();       // <— για να εμφανιστεί η εικόνα τώρα
+  updateStyles();       // 
   showOverlay('Game Over','You clicked on a mine.');
   return;
 }
@@ -288,7 +288,7 @@ function onLeft(e){
 
 
 function onRight(e){
-  if (gameOver) return; // ✅ δεν αλλάζουμε flags μετά το τέλος
+  if (gameOver) return; // 
 
   const id=parseInt(e.currentTarget.dataset.id,10);
   const c=cells[id];
@@ -301,7 +301,7 @@ function revealAllMines(){ for(const c of cells){ if(c.isMine) c.state='revealed
 function revealAllSafe(){
   for (const c of cells){
     if (!c.isZero && !c.isMine){
-      c.state = 'revealed';   // αποκάλυψε όλα τα safe
+      c.state = 'revealed';   // 
     }
   }
   updateStyles();
@@ -332,15 +332,15 @@ overlay.addEventListener('click', (e)=>{ if(e.target===overlay) hideOverlay(); }
 
 // Auto-load
 window.addEventListener('DOMContentLoaded', async ()=>{
-  // ✅ Βάλε το threshold στο 15 ΠΡΙΝ φορτώσουμε δεδομένα/υπολογισμούς
+  // 
   if (thresholdInput) {
-    threshold = 15;                 // προεπιλογή στη μεταβλητή
-    thresholdInput.value = '15';    // μετακίνησε το slider στο 15
-    if (thresholdVal) thresholdVal.textContent = '15'; // ενημέρωσε την ένδειξη
+    threshold = 15;                 // 
+    thresholdInput.value = '15';    // 
+    if (thresholdVal) thresholdVal.textContent = '15'; // 
   }
 
   try{
-    await loadData(); // εδώ μέσα καλείται computeNeighborsFixed() + assignMines() με όριο 15
+    await loadData(); // 
   }catch(err){
     dataStatus && (dataStatus.textContent='Error: '+err.message);
     console.error(err);
