@@ -52,19 +52,19 @@ input[type=range]{width:100%}
   .board{order:1}
 }
 .hex.disabled-cell {
-  fill: #8a8f98;         /* γκρι */
+  fill: #8a8f98;         
   stroke: #6f7680;
-  cursor: not-allowed;   /* δείκτης απαγόρευσης */
+  cursor: not-allowed;   
 }
 
 .hex.disabled-cell:hover {
-  stroke: #6f7680;       /* μην “φωτίζει” στο hover */
+  stroke: #6f7680;       
 }
 
-/* βεβαιώσου ότι το modal είναι relative */
+
 #overlay .modal { position: relative; }
 
-/* Close (Χ) πάνω δεξιά – καθαρό από generic button styles */
+
 #overlay .modal > .modal-close{
   all: unset;
   position: absolute;
@@ -90,7 +90,7 @@ input[type=range]{width:100%}
 #overlay .modal > .modal-close:hover { background: rgba(255,255,255,.20); }
 #overlay .modal > .modal-close:focus { outline: 2px solid rgba(255,255,255,.35); outline-offset: 2px; }
 
-/* όταν το SVG έχει class "locked", απενεργοποίησε τα κλικ */
+
 #board.locked .hex { pointer-events: none; }
 
 .stats{
@@ -108,4 +108,4 @@ input[type=range]{width:100%}
   margin:.25rem 0 .5rem;
 }
 
-.mine-icon { pointer-events: none; }  /* να μην “πιάνεται” το κλικ πάνω στο εικονίδιο */
+.mine-icon { pointer-events: none; }  
